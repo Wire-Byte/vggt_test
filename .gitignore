@@ -147,3 +147,6 @@ skyseg.onnx
 # pixi environments
 .pixi
 *.egg-info
+
+#屏蔽checkpoints文件夹下的所有文件
+checkpoints/*
