@@ -150,3 +150,9 @@ skyseg.onnx
 
 #屏蔽checkpoints文件夹下的所有文件
 checkpoints/*
+
+#屏蔽数据集multi_view_training_dslr_undistorted下的所有文件
+multi_view_training_dslr_undistorted/*
+
+#屏蔽jpeg_test/VGGT_EXP下的所有文件
+jpeg_test/VGGT_EXP/*
