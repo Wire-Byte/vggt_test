@@ -3,7 +3,7 @@ import glob
 from PIL import Image
 from tqdm import tqdm
 
-def process_eth3d_scene(scene_input_dir, output_base_dir, qualities=[10, 30, 50, 70, 90, 100]):
+def process_eth3d_scene(scene_input_dir, output_base_dir, qualities=[10, 20, 30, 40, 50, 60, 70, 80, 90, 100]):
     # 获取该场景下所有的原图 JPG (根据大小写可以适当调整通配符)
     img_paths = sorted(glob.glob(os.path.join(scene_input_dir, "*.JPG")))
     if not img_paths:

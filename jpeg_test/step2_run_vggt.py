@@ -53,11 +53,16 @@ def main():
     os.makedirs(output_glb_dir, exist_ok=True)
     
     # 测试的质量阶梯
-    qualities = [10, 30, 50, 70, 90, 100]
+    qualities = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 
     with torch.inference_mode(), torch.autocast(device_type="cuda", dtype=dtype):
         for q in qualities:
             print(f"\n======== 开始处理: Q={q} 的重建 ========")
+            glb_filename = os.path.join(output_glb_dir, f"{scene_name}_recon_Q{q}.glb")
+            if os.path.exists(glb_filename):
+                print(f"Skipping Q={q}, 结果已存在，为了节省时间直接跳过，如需重跑请删掉 GLB 文件")
+                continue
+
             q_dir = os.path.join(base_data_dir, f"Q_{q}")
             
             # 使用项目原生的 load_and_preprocess_images 直接拉进 Batch 张量 (这会确保你的中心剪裁合乎标准)
