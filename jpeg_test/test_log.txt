@@ -84,3 +84,78 @@ GLB Scene built
 对比组 [Q=50 ] 与基准原图之相对误差 | 平均平移偏移量: 0.00498 | 最大离谱单帧丢距: 0.01155
 对比组 [Q=70 ] 与基准原图之相对误差 | 平均平移偏移量: 0.00464 | 最大离谱单帧丢距: 0.01123
 对比组 [Q=90 ] 与基准原图之相对误差 | 平均平移偏移量: 0.00145 | 最大离谱单帧丢距: 0.00452
+
+(vggt_py11) shiyc2603@lthpc-AS-4124GS-TNR:/NEW_EDS/JJ_Group/shiyc2603/vggt_test$ python jpeg_test/step4_calculate_metric_error.py
+========== 尺度对齐分析 (Scale Alignment) ==========
+场景中相机间的平均物理距离: 1.217 米
+VGGT 空间中相机间的平均距离: 0.389 单位
+-> 测算出的缩放系数 S = 3.132 (即 VGGT 的 1.0 等于 3.132 米)
+
+========== 最终科学报告指标 (Physical Error) ==========
+在极度压缩 (Q=10) 下，VGGT 的预测漂移换算为真实物理空间：
+平均漂移量: 0.0991 米 (即 9.91 厘米)
+最大单帧漂移: 0.1974 米 (即 19.74 厘米)
+
+
+[*] 动态分配最空闲的显卡: cuda:1 (空闲显存: 24053 MiB)
+正在加载 VGGT 核心模型 ...
+
+======== 开始处理: Q=10 的重建 ========
+正在送入网络前向推理, 张量维度: torch.Size([1, 14, 3, 350, 518]) ...
+Building GLB scene
+Using Pointmap Branch
+GLB Scene built
+✔ 成功保存直观 3D 文件(包含点云及相机路点): /NEW_EDS/JJ_Group/shiyc2603/vggt_test/jpeg_test/VGGT_EXP/pipes_results/pipes_recon_Q10.glb
+✔ 成功保存相机外参字典及点云矩阵用于定量评测
+
+======== 开始处理: Q=30 的重建 ========
+正在送入网络前向推理, 张量维度: torch.Size([1, 14, 3, 350, 518]) ...
+Building GLB scene
+Using Pointmap Branch
+GLB Scene built
+✔ 成功保存直观 3D 文件(包含点云及相机路点): /NEW_EDS/JJ_Group/shiyc2603/vggt_test/jpeg_test/VGGT_EXP/pipes_results/pipes_recon_Q30.glb
+✔ 成功保存相机外参字典及点云矩阵用于定量评测
+
+======== 开始处理: Q=50 的重建 ========
+正在送入网络前向推理, 张量维度: torch.Size([1, 14, 3, 350, 518]) ...
+Building GLB scene
+Using Pointmap Branch
+GLB Scene built
+✔ 成功保存直观 3D 文件(包含点云及相机路点): /NEW_EDS/JJ_Group/shiyc2603/vggt_test/jpeg_test/VGGT_EXP/pipes_results/pipes_recon_Q50.glb
+✔ 成功保存相机外参字典及点云矩阵用于定量评测
+
+======== 开始处理: Q=70 的重建 ========
+正在送入网络前向推理, 张量维度: torch.Size([1, 14, 3, 350, 518]) ...
+Building GLB scene
+Using Pointmap Branch
+GLB Scene built
+✔ 成功保存直观 3D 文件(包含点云及相机路点): /NEW_EDS/JJ_Group/shiyc2603/vggt_test/jpeg_test/VGGT_EXP/pipes_results/pipes_recon_Q70.glb
+✔ 成功保存相机外参字典及点云矩阵用于定量评测
+
+======== 开始处理: Q=90 的重建 ========
+正在送入网络前向推理, 张量维度: torch.Size([1, 14, 3, 350, 518]) ...
+Building GLB scene
+Using Pointmap Branch
+GLB Scene built
+✔ 成功保存直观 3D 文件(包含点云及相机路点): /NEW_EDS/JJ_Group/shiyc2603/vggt_test/jpeg_test/VGGT_EXP/pipes_results/pipes_recon_Q90.glb
+✔ 成功保存相机外参字典及点云矩阵用于定量评测
+
+======== 开始处理: Q=100 的重建 ========
+正在送入网络前向推理, 张量维度: torch.Size([1, 14, 3, 350, 518]) ...
+Building GLB scene
+Using Pointmap Branch
+GLB Scene built
+✔ 成功保存直观 3D 文件(包含点云及相机路点): /NEW_EDS/JJ_Group/shiyc2603/vggt_test/jpeg_test/VGGT_EXP/pipes_results/pipes_recon_Q100.glb
+✔ 成功保存相机外参字典及点云矩阵用于定量评测
+✔ 发现 Q100 点云文件，准备执行全方位(位姿+几何)质量评测！
+
+=======================================================================================================================================
+压缩     | 相对平移误差 (无单位)         | 物理平移漂移 (cm)          | 旋转角度误差 (Degree)      | 3D点云重建质量分析 / Chamfer Distance (cm)           
+等级     | Mean      | Max      | Mean      | Max      | Mean      | Max      | Accuracy (准)   | Completeness (全)   | Overall (综合倒角)
+---------------------------------------------------------------------------------------------------------------------------------------
+Q=10   | 0.03163   | 0.06303  | 9.91      | 19.74    | 0.4830    | 0.8900   | 12.27          | 11.07              | 11.67     
+Q=30   | 0.00804   | 0.02643  | 2.52      | 8.28     | 0.2482    | 0.7982   | 3.65           | 3.54               | 3.59      
+Q=50   | 0.00498   | 0.01155  | 1.56      | 3.62     | 0.1308    | 0.3877   | 2.84           | 2.82               | 2.83      
+Q=70   | 0.00464   | 0.01123  | 1.45      | 3.52     | 0.1501    | 0.4511   | 2.42           | 2.41               | 2.41      
+Q=90   | 0.00145   | 0.00452  | 0.45      | 1.42     | 0.0764    | 0.2017   | 2.29           | 2.29               | 2.29      
+=======================================================================================================================================

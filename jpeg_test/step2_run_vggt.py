@@ -119,7 +119,12 @@ def main():
                 
             # -- 我们同时也单独存一份原生的相机 Npy 数据供下一步量化分析对比 ---
             np.save(os.path.join(output_glb_dir, f"camera_poses_Q{q}.npy"), predictions["extrinsic"])
-            print(f"✔ 成功保存相机外参字典用于定量评测")
+            
+            # --- 新增：保存点云数据供后续 Chamfer Distance 评测 ---
+            # 为了防止文件过大，我们采用 float16 取近似保存，并直接展平
+            np.save(os.path.join(output_glb_dir, f"world_points_Q{q}.npy"), predictions["world_points"].astype(np.float16))
+            
+            print(f"✔ 成功保存相机外参字典及点云矩阵用于定量评测")
 
 if __name__ == "__main__":
     main()
