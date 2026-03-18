@@ -34,6 +34,7 @@ def get_freest_gpu():
         return "cuda:0"
 
 def main():
+    import sys
     device = get_freest_gpu()
     # 依据你的显卡性质决定浮点数形式
     dtype = torch.bfloat16 if torch.cuda.get_device_capability()[0] >= 8 else torch.float16
@@ -45,7 +46,7 @@ def main():
     model = model.to(device)
     model.eval()  # 推理请必须开启 eval 模式
 
-    scene_name = "pipes"
+    scene_name = sys.argv[1] if len(sys.argv) > 1 else "pipes"
     # 这里请保持与第一步输出保存的位置相同
     base_data_dir = f"/NEW_EDS/JJ_Group/shiyc2603/vggt_test/jpeg_test/VGGT_EXP/{scene_name}_compressed"
     output_glb_dir = f"/NEW_EDS/JJ_Group/shiyc2603/vggt_test/jpeg_test/VGGT_EXP/{scene_name}_results"
@@ -130,6 +131,16 @@ def main():
             np.save(os.path.join(output_glb_dir, f"world_points_Q{q}.npy"), predictions["world_points"].astype(np.float16))
             
             print(f"✔ 成功保存相机外参字典及点云矩阵用于定量评测")
+            
+            # 及时清理内存，防止多个 Quality 循环导致显存累积 OOM
+            del outputs
+            del predictions
+            del extrinsics
+            del images_tensor
+            del glbscene
+            import gc
+            gc.collect()
+            torch.cuda.empty_cache()
 
 if __name__ == "__main__":
     main()

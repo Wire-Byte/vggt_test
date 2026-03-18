@@ -45,7 +45,8 @@ def get_vggt_camera_centers(extrinsics_npy):
     return np.array(centers)
 
 def main():
-    scene_name = "pipes"
+    import sys
+    scene_name = sys.argv[1] if len(sys.argv) > 1 else "pipes"
     
     # 1. 路径配置 (请确保路径正确)
     images_txt_path = f"/NEW_EDS/JJ_Group/shiyc2603/vggt_test/multi_view_training_dslr_undistorted/{scene_name}/dslr_calibration_undistorted/images.txt"

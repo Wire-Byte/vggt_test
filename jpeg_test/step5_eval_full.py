@@ -2,6 +2,24 @@ import os
 import numpy as np
 from scipy.spatial import cKDTree
 
+def get_real_camera_centers(images_txt_path):
+    from scipy.spatial.transform import Rotation as R
+    cam_centers = {}
+    with open(images_txt_path, 'r') as f:
+        lines = f.readlines()
+    for line in lines:
+        if line.startswith('#'): continue
+        parts = line.strip().split()
+        if len(parts) >= 10 and parts[8].isdigit():
+            qw, qx, qy, qz = map(float, parts[1:5])
+            tx, ty, tz = map(float, parts[5:8])
+            filename = os.path.basename(parts[9])
+            rot_matrix = R.from_quat([qx, qy, qz, qw]).as_matrix()
+            t_vec = np.array([tx, ty, tz])
+            center = -np.dot(rot_matrix.T, t_vec)
+            cam_centers[filename] = center
+    return cam_centers
+
 def calculate_pose_errors(pose_gt, pose_test):
     """ 计算两个 Nx3x4 位姿矩阵的平移误差和旋转误差 """
     trans_errors = []
@@ -63,7 +81,8 @@ def calculate_point_cloud_metrics(points_gt, points_test, scale_factor, sample_s
     return accuracy_m * cm_ratio, completeness_m * cm_ratio, overall_cd_m * cm_ratio
 
 def main():
-    scene_name = "pipes"
+    import sys
+    scene_name = sys.argv[1] if len(sys.argv) > 1 else "pipes"
     output_glb_dir = f"/NEW_EDS/JJ_Group/shiyc2603/vggt_test/jpeg_test/VGGT_EXP/{scene_name}_results"
     
     gt_poses_path = os.path.join(output_glb_dir, "camera_poses_Q100.npy")
@@ -75,6 +94,31 @@ def main():
         
     gt_poses = np.load(gt_poses_path)
     
+    import glob
+    images_txt_path = f"/NEW_EDS/JJ_Group/shiyc2603/vggt_test/multi_view_training_dslr_undistorted/{scene_name}/dslr_calibration_undistorted/images.txt"
+    image_folder = f"/NEW_EDS/JJ_Group/shiyc2603/vggt_test/jpeg_test/VGGT_EXP/{scene_name}_compressed/Q_100"
+    real_cam_dict = get_real_camera_centers(images_txt_path)
+    image_paths = sorted(glob.glob(os.path.join(image_folder, "*.jpg")) + glob.glob(os.path.join(image_folder, "*.JPG")))
+    image_names = [os.path.basename(p) for p in image_paths]
+    real_centers = np.array([real_cam_dict[name] for name in image_names])
+    
+    vggt_centers = []
+    for ext in gt_poses:
+        rot_matrix = ext[:3, :3]
+        t_vec = ext[:3, 3]
+        center = -np.dot(rot_matrix.T, t_vec)
+        vggt_centers.append(center)
+    vggt_centers = np.array(vggt_centers)
+    
+    real_dists, vggt_dists = [], []
+    num_cams = len(real_centers)
+    for i in range(num_cams):
+        for j in range(i+1, num_cams):
+            real_dists.append(np.linalg.norm(real_centers[i] - real_centers[j]))
+            vggt_dists.append(np.linalg.norm(vggt_centers[i] - vggt_centers[j]))
+    scale_factor = np.mean(real_dists) / np.mean(vggt_dists)
+    print(f"[{scene_name}] Scale Factor calculated as: {scale_factor:.4f}")
+    
     calculate_cd = os.path.exists(gt_points_path)
     if calculate_cd:
         gt_points = np.load(gt_points_path)
@@ -83,9 +127,6 @@ def main():
         print("✖ 未发现 Q100 点云！只测相机位姿，不测三维重建几何指标。\n")
     
     qualities = [10, 20, 30, 40, 50, 60, 70, 80, 90]
-    
-    # 将这里替换为你前面在 step4 算出来的尺度 S。我先用了假设值，如修改会自动应用到全局
-    scale_factor = 3.132 
     
     print("=" * 135)
     print(f"{'压缩':<6} | {'相对平移误差 (无单位)':<20} | {'物理平移漂移 (cm)':<20} | {'旋转角度误差 (Degree)':<20} | {'3D点云重建质量分析 / Chamfer Distance (cm)':<45}")

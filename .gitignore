@@ -156,3 +156,6 @@ multi_view_training_dslr_undistorted/*
 
 #屏蔽jpeg_test/VGGT_EXP下的所有文件
 jpeg_test/VGGT_EXP/*
+
+#屏蔽jpeg_test/vis_plot下的所有文件
+jpeg_test/vis_plot/*

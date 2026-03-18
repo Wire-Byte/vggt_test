@@ -44,8 +44,9 @@ def process_eth3d_scene(scene_input_dir, output_base_dir, qualities=[10, 20, 30,
         print(f"-> 平均数据量: {avg_bpp:.4f} bpp 对于质量 Q={q}")
 
 if __name__ == "__main__":
+    import sys
     # 配置为你自己的实际路径，用 pipes 进行测试
-    SCENE_NAME = "pipes"
+    SCENE_NAME = sys.argv[1] if len(sys.argv) > 1 else "pipes"
     # 根据你的文件管理器目录适配，下面是针对你 F 盘下载挂载的路径
     INPUT_DIR = f"/NEW_EDS/JJ_Group/shiyc2603/vggt_test/multi_view_training_dslr_undistorted/{SCENE_NAME}/images/dslr_images_undistorted" 
     

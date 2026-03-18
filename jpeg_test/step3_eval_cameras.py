@@ -17,7 +17,8 @@ def calculate_translation_error(pose1, pose2):
     return np.mean(error_list), np.max(error_list)
 
 def main():
-    scene_name = "pipes"
+    import sys
+    scene_name = sys.argv[1] if len(sys.argv) > 1 else "pipes"
     output_glb_dir = f"/NEW_EDS/JJ_Group/shiyc2603/vggt_test/jpeg_test/VGGT_EXP/{scene_name}_results"
     
     # 我们以最为真实的无损原图所吐出来的结果作为咱们计算其他粗糙版本差距时使用的“基准对比 Ground Truth”
